@@ -14,7 +14,7 @@ export const handler = async (event) => {
     // Validate if this is a GET request
     if (!event.requestContext || !event.requestContext.http || !(event.requestContext.http.method === 'GET')) return sendError(400, 'Only GET method is supported', event);
     // An example of expected path is /images/rio/1.jpeg/format=auto,width=100 or /images/rio/1.jpeg/original where /images/rio/1.jpeg is the path of the original image
-    var imagePathArray = event.requestContext.http.path.split('/');
+    var imagePathArray = event.requestContext.http.path.split('/');    
     // get the requested image operations
     var operationsPrefix = imagePathArray.pop();
     // get the original image path images/rio/1.jpg
@@ -28,13 +28,15 @@ export const handler = async (event) => {
     try {
         const getOriginalImageCommand = new GetObjectCommand({ Bucket: S3_ORIGINAL_IMAGE_BUCKET, Key: originalImagePath });
         const getOriginalImageCommandOutput = await s3Client.send(getOriginalImageCommand);
-        console.log(`Got response from S3 for ${originalImagePath}`);
-
-        originalImageBody = getOriginalImageCommandOutput.Body.transformToByteArray();
+        console.log(`Got response from S3 for ${originalImagePath} ${getOriginalImageCommandOutput}`);
+        originalImageBody = getOriginalImageCommandOutput.Body;
         contentType = getOriginalImageCommandOutput.ContentType;
     } catch (error) {
         return sendError(500, 'Error downloading original image', error);
     }
+
+    originalImageBody = await originalImageBody.transformToByteArray()
+
     let transformedImage = Sharp(await originalImageBody, { failOn: 'none', animated: true });
     // Get image orientation to rotate if needed
     const imageMetadata = await transformedImage.metadata();
