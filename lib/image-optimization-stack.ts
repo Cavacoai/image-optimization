@@ -30,6 +30,7 @@ var DEPLOY_SAMPLE_WEBSITE = 'false';
 
 type ImageDeliveryCacheBehaviorConfig = {
   origin: any;
+  compress: any;
   viewerProtocolPolicy: any;
   cachePolicy: any;
   functionAssociations: any;
@@ -208,11 +209,11 @@ export class ImageOptimizationStack extends Stack {
     var imageDeliveryCacheBehaviorConfig: ImageDeliveryCacheBehaviorConfig = {
       origin: imageOrigin,
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      compress: false,
       cachePolicy: new cloudfront.CachePolicy(this, `ImageCachePolicy${this.node.addr}`, {
         defaultTtl: Duration.hours(24),
         maxTtl: Duration.days(365),
-        minTtl: Duration.seconds(0),
-        queryStringBehavior: cloudfront.CacheQueryStringBehavior.all()
+        minTtl: Duration.seconds(0)
       }),
       functionAssociations: [{
         eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,

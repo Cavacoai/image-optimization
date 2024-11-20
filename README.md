@@ -17,18 +17,18 @@ Note the following:
 * To prevent from unauthorized invocations of the Lambda function, CloudFront is configured with OAC to sign requests using sigV4 before sending them to invoke the Lambda service.
 
 ## Deploy the solution using CDK
-AWS CDK is an open-source software development framework used to define cloud infrastructure in code and provision it through AWS CloudFormation. Follow these steps in your command line to deploy the image optimization solution with CDK, using the region and account information configured in your AWS CLI. Note that you need to use a CLI on a x64 based processor (e.g. T2 EC2 instances).
+
+> [!NOTE]
+> This solution is using [sharp](https://github.com/lovell/sharp) library for image processing. Your local development environment and the image processing Lambda function environment may be using different CPU and OS architectures - for example, when you are on an M1 Mac, trying to build code for a Linux-based, x86 Lambda runtime. If necessary, the solution will automatically perform a [cross-platform](https://sharp.pixelplumbing.com/install#cross-platform) installation of all required dependencies. **Ensure your local npm version is 10.4.0 or later**, to correctly leverage npm flags for native dependency management and take advantage of Lambda function size optimizations.
 
 ```
-git clone https://github.com/aws-samples/image-optimization.git 
+git clone https://github.com/aws-samples/image-optimization.git
 cd image-optimization
 npm install
 cdk bootstrap
 npm run build
 cdk deploy
 ```
-
-Note that the solution deploys the latest version of the Sharp library. If a new version has been released, and you'd like to updgrade to the new version (for ex to patch a [cve](https://github.com/lovell/sharp/issues/3798)), rebuild and redeploy using CDK.
 
 When the deployment is completed within minutes, the CDK output will include the domain name of the CloudFront distribution created for image optimization (ImageDeliveryDomain =YOURDISTRIBUTION.cloudfront.net). The stack will include an S3 bucket with sample images (OriginalImagesS3Bucket = YourS3BucketWithOriginalImagesGeneratedName). To verify that it is working properly, test the following optimized image URL https:// YOURDISTRIBUTION.cloudfront.net/images/rio/1.jpeg?format=auto&width=300.
 
