@@ -1,8 +1,7 @@
 name: CI
-on:
-  workflow_dispatch:
+on: [pull_request]
 jobs:
   build:
-    runs-on: arc-runner-org
+    runs-on: arc-runner-org-no-docker
     steps:
       - run: echo "Hello build!"
