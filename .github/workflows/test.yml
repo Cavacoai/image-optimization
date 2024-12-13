@@ -2,6 +2,6 @@ name: CI
 on: [workflow_dispatch]
 jobs:
   build:
-    runs-on: arc-runner-org-no-docker
+    runs-on: [self-hosted, linux, X64, arc-runner-org-no-docker]
     steps:
       - run: echo "Hello build!"
