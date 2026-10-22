@@ -1,7 +1,11 @@
 name: CI
 on: [workflow_dispatch]
+permissions: {}
+
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: [self-hosted, linux, X64, arc-runner-org-no-docker]
     steps:
       - run: echo "Hello build!"
