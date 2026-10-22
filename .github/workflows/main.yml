@@ -1,11 +1,16 @@
 name: CI2
 on:
   workflow_dispatch:
+permissions: {}
+
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      # Keep v4 until this self-hosted runner supports the Node 24 action runtime.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Run a one-line script
         run: echo Hello, world!
 
